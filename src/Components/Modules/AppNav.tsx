@@ -4,6 +4,16 @@ import { useAuthContext } from "../../Providers/Auth";
 
 export const AppNavBar: React.FC = () => {
   const { isAuth } = useAuthContext();
+  const { setAccessToken, setIsAuth, setUser } = useAuthContext();
+  const handleLogout = () => {
+    try {
+      setAccessToken("");
+      setIsAuth(false);
+      setUser(undefined);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <React.Fragment>
       <nav className="w-full top-0 sticky bg-white px-2 py-2 shadow-md z-10">
@@ -39,6 +49,13 @@ export const AppNavBar: React.FC = () => {
                       >
                         Make Corn Job
                       </Link>
+                      <button
+                       type='button'
+                       onClick={()=>handleLogout()}
+                        className="text-lg font-bold  text-slate-700 hover:text-slate-900"
+                      >
+                       Logout
+                      </button>
                     </React.Fragment>
                   ) : (
                     <React.Fragment>

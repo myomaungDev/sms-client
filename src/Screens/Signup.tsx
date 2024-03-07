@@ -5,20 +5,27 @@ import { API } from "../Services";
 import { APIURLS } from "../Config";
 import { AxiosError, AxiosResponse } from "axios";
 import { AppUnAuthProtectedWrapper } from "../Components/Modules/AppUnAuthenticatedWrapper";
+import { useAuthContext } from "../Providers/Auth";
 
 export const AppSignupScreen: React.FC = () => {
+  const { setIsAuth, setAccessToken } = useAuthContext();
   const { control, handleSubmit } = useForm({
     defaultValues: {
       username: "",
+      email:"",
       password: "",
     },
     mode: "onChange",
   });
   const SubmitForm = (data: any) => {
     try {
-      API.post(`${APIURLS.users.signup}`, data)
+      API.post(`${APIURLS.users.login}`, data)
         .then((res: AxiosResponse) => {
-          console.log(res.data);
+          const { accessToken, status } = res.data;
+          if (status === 200) {
+            setAccessToken(accessToken);
+            setIsAuth(true);
+          }
         })
         .catch((err: AxiosError) => {
           console.log(err);
@@ -63,6 +70,39 @@ export const AppSignupScreen: React.FC = () => {
                       {errors && errors.username && errors.username.message ? (
                         <p className="text-xs text-red-600">
                           {errors.username.message}
+                        </p>
+                      ) : null}
+                    </React.Fragment>
+                  )}
+                />
+              </div>
+              <div className="w-full flex flex-col space-y-2">
+                <label htmlFor="username" className="text-sm text-slate-600">
+                  {" "}
+                  Email
+                </label>
+                <Controller
+                  control={control}
+                  name='email'
+                  rules={{
+                    required: { value: true, message: `Don't leave it blank.` },
+                  }}
+                  render={({
+                    formState: { errors },
+                    field: { onBlur, onChange, ref, value },
+                  }) => (
+                    <React.Fragment>
+                      <input
+                        className="w-full form-input"
+                        type="text"
+                        ref={ref}
+                        value={value}
+                        onBlur={onBlur}
+                        onChange={(e) => onChange(e.target.value)}
+                      />
+                      {errors && errors.email && errors.email.message ? (
+                        <p className="text-xs text-red-600">
+                          {errors.email.message}
                         </p>
                       ) : null}
                     </React.Fragment>
