@@ -5,6 +5,7 @@ import { AppAdminUserScreen } from "./AdminUsers";
 import { AppAdminJobsRootScreen } from "./AdminJobs";
 import { AppAdminCreateJobScreen } from "./AdminCreateJob";
 import { AppAdminSMSListByScreen } from "./AdminSmsListByJob";
+import { AppSignupScreen } from "./Signup";
 
 export const AppRouter = createBrowserRouter([
   {
@@ -13,7 +14,7 @@ export const AppRouter = createBrowserRouter([
   },
   {
     path: "/signup",
-    element: <AppLoginScreen />,
+    element: <AppSignupScreen />,
   },
   {
     path: "/dashboard",
