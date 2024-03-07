@@ -28,7 +28,8 @@ interface props {
 export const AuthContextProvider: React.FC<props> = ({ children }) => {
   const [isAuth, setisAuth] = useState(true);
   const [user, setuser] = useState<userProps>();
-  const [accessToken, setaccessToken] = useState("");
+  const storeedToken = localStorage.getItem('_access_token')
+  const [accessToken, setaccessToken] = useState<string>(storeedToken ? storeedToken : "");
   return (
     <React.Fragment>
       <AuthContext.Provider
