@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { PageWrapper } from "../Components/Modules/PageWrapper";
 import { Controller, useForm } from "react-hook-form";
 import { API } from "../Services";
@@ -9,22 +9,34 @@ import { useAuthContext } from "../Providers/Auth";
 
 export const AppSignupScreen: React.FC = () => {
   const { setIsAuth, setAccessToken } = useAuthContext();
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const { control, handleSubmit } = useForm({
     defaultValues: {
       username: "",
-      email:"",
+      email: "",
       password: "",
     },
     mode: "onChange",
   });
   const SubmitForm = (data: any) => {
     try {
-      API.post(`${APIURLS.users.login}`, data)
+      API.post(`${APIURLS.users.signup}`, data)
         .then((res: AxiosResponse) => {
-          const { accessToken, status } = res.data;
-          if (status === 200) {
-            setAccessToken(accessToken);
+          if (
+            res.data &&
+            res.data.status &&
+            res.data.status === 200 &&
+            res.data.accessToken
+          ) {
+            setAccessToken(res.data.accessToken);
             setIsAuth(true);
+          } else if (
+            res.data &&
+            res.data.status &&
+            res.data.status === 400 &&
+            res.data.errors
+          ) {
+            setErrorMessages(res.data.errors);
           }
         })
         .catch((err: AxiosError) => {
@@ -83,7 +95,7 @@ export const AppSignupScreen: React.FC = () => {
                 </label>
                 <Controller
                   control={control}
-                  name='email'
+                  name="email"
                   rules={{
                     required: { value: true, message: `Don't leave it blank.` },
                   }}
@@ -127,7 +139,7 @@ export const AppSignupScreen: React.FC = () => {
                     <React.Fragment>
                       <input
                         className="w-full form-input"
-                        type="text"
+                        type="password"
                         ref={ref}
                         value={value}
                         onBlur={onBlur}
@@ -142,6 +154,11 @@ export const AppSignupScreen: React.FC = () => {
                   )}
                 />
               </div>
+              {errorMessages.map((message, i) => (
+                <p key={i} className="text-xs text-red-600">
+                  {message}
+                </p>
+              ))}
               <div className="w-full flex-col flex my-4">
                 <button
                   type="submit"
