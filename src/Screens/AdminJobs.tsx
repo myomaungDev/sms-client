@@ -84,6 +84,9 @@ export const AppAdminJobsRootScreen: React.FC = () => {
                     <th className="px-4 py-2 bg-white text-gray-800 border border-gray-600">
                       Title
                     </th>
+                    <th className="px-4 py-2 bg-white text-gray-800 border border-gray-600">
+                      Scheduled At
+                    </th>
                     <th className="px-4 py-2  bg-white text-gray-800 border border-gray-600">
                       Created At
                     </th>
@@ -103,6 +106,9 @@ export const AppAdminJobsRootScreen: React.FC = () => {
                     <tr key={index}>
                       <td className="px-4 py-2 border border-gray-600">
                         {row.title}
+                      </td>
+                      <td className="px-4 py-2 border border-gray-600">
+                        {row.started_at?moment(row.started_at).format("YYYY-MM-DD HH:mm"):"immediately"}
                       </td>
                       <td className="px-4 py-2 border border-gray-600">
                         {moment(row.createdAt).format("YYYY-MM-DD HH:mm")}
